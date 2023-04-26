@@ -44,6 +44,12 @@
 //! clients about whether they are currently visible or not (allowing them to stop drawing if they
 //! are not, for example).
 //!
+//! The [`screencopy`] module provides the necessary logic for screen content capturing on
+//! client buffers. The module makes use of Wlroots' screencopy protocol. This protocol allows clients
+//! to request the compositor to copy part or all of the screen content to a client buffer.
+//! Many screenshotting clients utilize the screencopy protocol, so this module is especially
+//! useful if you want screenshot clients using the screencopy protocol to work.
+//!
 
 pub mod buffer;
 pub mod compositor;
@@ -56,6 +62,7 @@ pub mod output;
 pub mod presentation;
 pub mod primary_selection;
 pub mod relative_pointer;
+pub mod screencopy;
 pub mod seat;
 pub mod shell;
 pub mod shm;
