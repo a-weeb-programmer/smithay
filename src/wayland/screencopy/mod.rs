@@ -43,12 +43,16 @@ impl ScreencopyState {
     where
         D: GlobalDispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
             + Dispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
-            + Dispatch<zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1, ()>
             + ScreencopyHandler
             + 'static,
     {
         let id = display.create_global::<D, zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, _>(3, ());
         ScreencopyState { id }
+    }
+
+    /// Gets the id of the [`ScreencopyManager`] global
+    pub fn global(&self) -> GlobalId {
+        self.id.clone()
     }
 }
 
@@ -56,7 +60,6 @@ impl<D> GlobalDispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, (), 
 where
     D: GlobalDispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
         + Dispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
-        + Dispatch<zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1, ()>
         + ScreencopyHandler
         + 'static,
 {
@@ -114,16 +117,15 @@ where
 impl<D> Dispatch<zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1, (), D> for ScreencopyState
 where
     D: GlobalDispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
-        + Dispatch<zwlr_screencopy_manager_v1::ZwlrScreencopyManagerV1, ()>
         + Dispatch<zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1, ()>
         + ScreencopyHandler
         + 'static,
 {
     fn request(
-        _state: &mut D,
+        state: &mut D,
         _client: &wayland_server::Client,
-        _resource: &zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1,
-        _request: <zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1 as wayland_server::Resource>::Request,
+        resource: &zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1,
+        request: <zwlr_screencopy_frame_v1::ZwlrScreencopyFrameV1 as wayland_server::Resource>::Request,
         _data: &(),
         _dhandle: &DisplayHandle,
         _data_init: &mut wayland_server::DataInit<'_, D>,
